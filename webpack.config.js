@@ -1,7 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { optimize } = require('webpack')
 
 module.exports = {
   mode: 'development',
@@ -12,7 +11,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js'
+    filename: '[name].[contenthash].js',
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
@@ -28,7 +28,13 @@ module.exports = {
       chunks: 'all'
     }
   },
-  plugins: [new HtmlWebpackPlugin({ template: './index.html' }), new CleanWebpackPlugin()],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: 'index.html'
+    }),
+    new CleanWebpackPlugin()
+  ],
   module: {
     rules: [
       {
