@@ -13,6 +13,15 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js'
   },
+  resolve: {
+    extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@model': path.resolve(__dirname, 'src/model'),
+      '@css': path.resolve(__dirname, 'src/css'),
+      '@assets': path.resolve(__dirname, 'src/assets')
+    }
+  },
   plugins: [new HtmlWebpackPlugin({ template: './index.html' }), new CleanWebpackPlugin()],
   module: {
     rules: [
