@@ -1,6 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const { optimize } = require('webpack')
 
 module.exports = {
   mode: 'development',
@@ -20,6 +21,11 @@ module.exports = {
       '@model': path.resolve(__dirname, 'src/model'),
       '@css': path.resolve(__dirname, 'src/css'),
       '@assets': path.resolve(__dirname, 'src/assets')
+    }
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
     }
   },
   plugins: [new HtmlWebpackPlugin({ template: './index.html' }), new CleanWebpackPlugin()],
