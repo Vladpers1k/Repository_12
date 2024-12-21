@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
+const { css } = require('jquery')
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_PRO = !IS_DEV
@@ -20,6 +21,21 @@ const optimize = () => {
 }
 
 const getFilename = (ext) => `[name]${IS_DEV ? '' : '.[hash]'}.${ext}`
+
+const setCssLoaders = (extra) => {
+  const loaders = [
+    {
+      loader: MiniCssExtractPlugin.loader
+    },
+    'css-loader'
+  ]
+
+  if (extra) {
+    loaders.push(extra)
+  }
+
+  return loaders
+}
 
 module.exports = {
   mode: IS_DEV ? 'development' : 'production',
@@ -70,33 +86,15 @@ module.exports = {
     rules: [
       {
         test: /\.css$/i,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          'css-loader'
-        ]
+        use: setCssLoaders()
       },
       {
         test: /\.less$/i,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          'css-loader',
-          'less-loader'
-        ]
+        use: setCssLoaders('less-loader')
       },
-
       {
         test: /\.s[ac]ss$/i,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          'css-loader',
-          'sass-loader'
-        ]
+        use: setCssLoaders('sass-loader')
       },
       {
         test: /\.(png|jpe?g|gif|svg|webp|)$/i,
