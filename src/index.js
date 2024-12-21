@@ -6,6 +6,6 @@ import logo from '@assets/icon-square-big.png'
 
 const post = new Post('Webpack Post Title', logo)
 
-$('pre').html(post.toString())
+$('pre').addClass('code').html(post.toString())
 
 console.log('JSON:', json)
