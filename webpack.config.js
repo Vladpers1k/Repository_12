@@ -3,12 +3,26 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_PRO = !IS_DEV
 
+const optimize = () => {
+  const config = {
+    splitChunks: {
+      chunks: 'all'
+    },
+    minimizer: [new CssMinimizerWebpackPlugin()]
+  }
+
+  return config
+}
+
+const getFilename = (ext) => `[name]${IS_DEV ? '' : '.[hash]'}.${ext}`
+
 module.exports = {
-  mode: 'development',
+  mode: IS_DEV ? 'development' : 'production',
   context: path.resolve(__dirname, 'src'),
   entry: {
     main: './index.js',
@@ -17,7 +31,7 @@ module.exports = {
   target: 'web',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[fullhash].js',
+    filename: getFilename('js'),
     publicPath: '/'
   },
   resolve: {
@@ -29,11 +43,7 @@ module.exports = {
       '@assets': path.resolve(__dirname, 'src/assets')
     }
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    }
-  },
+  optimization: optimize(),
   devServer: {
     port: 4200,
     hot: false
@@ -53,7 +63,7 @@ module.exports = {
       ]
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[fullhash].css'
+      filename: getFilename('css')
     })
   ],
   module: {
@@ -65,6 +75,27 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader
           },
           'css-loader'
+        ]
+      },
+      {
+        test: /\.less$/i,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader',
+          'less-loader'
+        ]
+      },
+
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader',
+          'sass-loader'
         ]
       },
       {
