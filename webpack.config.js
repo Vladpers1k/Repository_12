@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
 const { css } = require('jquery')
 
 const IS_DEV = process.env.NODE_ENV === 'development'
@@ -14,7 +15,7 @@ const optimize = () => {
     splitChunks: {
       chunks: 'all'
     },
-    minimizer: [new CssMinimizerWebpackPlugin()]
+    minimizer: [new CssMinimizerWebpackPlugin(), new TerserWebpackPlugin()]
   }
 
   return config
@@ -37,12 +38,41 @@ const setCssLoaders = (extra) => {
   return loaders
 }
 
+const setPlugins = () => {
+  const plugins = [
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: 'index.html'
+    }),
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src/favicon.png'),
+          to: path.resolve(__dirname, 'dist')
+        }
+      ]
+    }),
+    new MiniCssExtractPlugin({
+      filename: getFilename('css')
+    })
+  ]
+
+  if (IS_DEV) {
+  }
+
+  if (IS_PRO) {
+  }
+
+  return plugins
+}
+
 module.exports = {
   mode: IS_DEV ? 'development' : 'production',
   context: path.resolve(__dirname, 'src'),
   entry: {
-    main: './index.js',
-    stat: './statistics.js'
+    main: './index.jsx',
+    stat: './statistics.ts'
   },
   target: 'web',
   output: {
@@ -64,26 +94,41 @@ module.exports = {
     port: 4200,
     hot: false
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './index.html',
-      filename: 'index.html'
-    }),
-    new CleanWebpackPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, 'src/favicon.png'),
-          to: path.resolve(__dirname, 'dist')
-        }
-      ]
-    }),
-    new MiniCssExtractPlugin({
-      filename: getFilename('css')
-    })
-  ],
+  plugins: setPlugins(),
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
+      },
+
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-typescript']
+          }
+        }
+      },
       {
         test: /\.css$/i,
         use: setCssLoaders()
