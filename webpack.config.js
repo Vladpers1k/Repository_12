@@ -38,6 +38,8 @@ const setCssLoaders = (extra) => {
   return loaders
 }
 
+setJsLoaders = () => {}
+
 const setPlugins = () => {
   const plugins = [
     new HtmlWebpackPlugin({
@@ -94,6 +96,7 @@ module.exports = {
     port: 4200,
     hot: false
   },
+  devtool: IS_DEV ? 'source-map' : false,
   plugins: setPlugins(),
   module: {
     rules: [

@@ -3,7 +3,7 @@ import Post from '@model/post'
 import json from '@assets/data.json'
 import logo from '@assets/icon-square-big.png'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import '@css/style.css'
@@ -13,34 +13,38 @@ import './sass/style.sass'
 
 const post = new Post('Webpack Post Title', logo)
 
-$('pre').addClass('code').html(post.toString())
+const App = () => {
+  useEffect(() => {
+    $('pre').addClass('code').text(post.toString())
+  }, [])
+
+  return (
+    <div className="container">
+      <h1>Webpack training</h1>
+      <div className="logo" />
+      <pre />
+      <div className="less-demo">
+        <h2>Less test</h2>
+      </div>
+      <div className="sass-demo">
+        <h2>Sass test</h2>
+      </div>
+      <div className="scss-demo">
+        <h2>Scss test</h2>
+      </div>
+    </div>
+  )
+}
+
+const container = document.getElementById('root')
+const root = createRoot(container)
+
+root.render(<App />)
 
 console.log('JSON:', json)
 
 async function start() {
-  return await new Promise((r) => setTimeout(() => r('Async done.'), 2000))
+  return await new Promise((resolve) => setTimeout(() => resolve('Async done.'), 2000))
 }
 
 start().then((res) => console.log(res))
-
-const container = document.getElementById('#root')
-const root = createRoot(container)
-
-const App = () => (
-  <div class=" container">
-    <h1>Webpack training</h1>
-    <div class="logo" />
-    <pre />
-    <div class="less-demo">
-      <h2>Less test</h2>
-    </div>
-    <div class="sass-demo">
-      <h2>Sass test</h2>
-    </div>
-    <div class="scss-demo">
-      <h2>Scss test</h2>
-    </div>
-  </div>
-)
-
-root.render(<App />)
