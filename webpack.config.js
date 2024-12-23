@@ -6,20 +6,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 const EslintWebpackPlugin = require('eslint-webpack-plugin')
-const { css } = require('jquery')
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_PRO = !IS_DEV
 
 const optimize = () => {
-  const config = {
+  return {
     splitChunks: {
       chunks: 'all'
     },
     minimizer: [new CssMinimizerWebpackPlugin(), new TerserWebpackPlugin()]
   }
-
-  return config
 }
 
 const getFilename = (ext) => `[name]${IS_DEV ? '' : '.[hash]'}.${ext}`
@@ -46,6 +43,7 @@ const setJsLoaders = (extra) => {
       presets: ['@babel/preset-env']
     }
   }
+
   if (extra) {
     loaders.options.presets.push(extra)
   }
@@ -56,7 +54,7 @@ const setJsLoaders = (extra) => {
 const setPlugins = () => {
   const plugins = [
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: path.resolve(__dirname, 'src/index.html'), // Шлях до index.html
       filename: 'index.html'
     }),
     new CleanWebpackPlugin(),
@@ -64,10 +62,6 @@ const setPlugins = () => {
       patterns: [
         {
           from: path.resolve(__dirname, 'src/favicon.png'),
-          to: path.resolve(__dirname, 'dist')
-        },
-        {
-          from: path.resolve(__dirname, '.nojekyll'),
           to: path.resolve(__dirname, 'dist')
         }
       ]
@@ -80,12 +74,6 @@ const setPlugins = () => {
       fix: true
     })
   ]
-
-  if (IS_DEV) {
-  }
-
-  if (IS_PRO) {
-  }
 
   return plugins
 }
@@ -101,7 +89,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: getFilename('js'),
-    publicPath: 'Repository_12'
+    publicPath: '/Repository_12/'
   },
   resolve: {
     extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
@@ -126,13 +114,11 @@ module.exports = {
         exclude: /node_modules/,
         use: setJsLoaders()
       },
-
       {
         test: /\.jsx$/,
         exclude: /node_modules/,
         use: setJsLoaders('@babel/preset-react')
       },
-
       {
         test: /\.ts$/,
         exclude: /node_modules/,
