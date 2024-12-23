@@ -65,6 +65,10 @@ const setPlugins = () => {
         {
           from: path.resolve(__dirname, 'src/favicon.png'),
           to: path.resolve(__dirname, 'dist')
+        },
+        {
+          from: path.resolve(__dirname, '.nojekyll'),
+          to: path.resolve(__dirname, 'dist')
         }
       ]
     }),
@@ -97,7 +101,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: getFilename('js'),
-    publicPath: '/'
+    publicPath: 'Repository_12'
   },
   resolve: {
     extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
