@@ -87,9 +87,9 @@ module.exports = {
   },
   target: 'web',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
     filename: getFilename('js'),
-    publicPath: '/Repository_12/'
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
