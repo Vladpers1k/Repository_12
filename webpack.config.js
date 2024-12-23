@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
+const EslintWebpackPlugin = require('eslint-webpack-plugin')
 const { css } = require('jquery')
 
 const IS_DEV = process.env.NODE_ENV === 'development'
@@ -38,7 +39,19 @@ const setCssLoaders = (extra) => {
   return loaders
 }
 
-setJsLoaders = () => {}
+const setJsLoaders = (extra) => {
+  const loaders = {
+    loader: 'babel-loader',
+    options: {
+      presets: ['@babel/preset-env']
+    }
+  }
+  if (extra) {
+    loaders.options.presets.push(extra)
+  }
+
+  return loaders
+}
 
 const setPlugins = () => {
   const plugins = [
@@ -57,6 +70,10 @@ const setPlugins = () => {
     }),
     new MiniCssExtractPlugin({
       filename: getFilename('css')
+    }),
+    new EslintWebpackPlugin({
+      extensions: ['js'],
+      fix: true
     })
   ]
 
@@ -103,34 +120,19 @@ module.exports = {
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }
+        use: setJsLoaders()
       },
 
       {
         test: /\.jsx$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
-        }
+        use: setJsLoaders('@babel/preset-react')
       },
 
       {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-typescript']
-          }
-        }
+        use: setJsLoaders('@babel/preset-typescript')
       },
       {
         test: /\.css$/i,

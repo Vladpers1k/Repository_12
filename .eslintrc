@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "off",
+    "sort-keys": "warn",
+    "valid-jsdoc": "off"
+  },
+
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+
+  "parserOptions": {
+    "ecmaVersion": 2023,
+    "sourceType": "module"
+  },
+
+  "extends": ["eslint:recommended"]
+}
