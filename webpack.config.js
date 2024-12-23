@@ -95,7 +95,7 @@ module.exports = {
   },
   target: 'web',
   output: {
-    path: path.resolve(__dirname, 'docs'),
+    path: path.resolve(__dirname, 'dist'),
     filename: getFilename('js'),
     publicPath: '/'
   },
